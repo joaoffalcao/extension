@@ -1,8 +1,8 @@
 {
-  "name": "Getting Started Example",
+  "name": "FalconsExtension",
   "version": "1.0",
-  "description": "Build an Extension!",
-  "permissions": ["activeTab", "declarativeContent", "storage"],
+  "description": "Extends you a bit",
+  "permissions": ["activeTab", "webNavigation", "declarativeContent", "storage", "tabs", "notifications"],
   "options_page": "options.html",
   "icons": {
     "16": "images/get_started16.png",
@@ -12,7 +12,12 @@
   },
   "content_scripts": [{
     "js": ["label.js"],
-    "matches": ["*://www.instagram.com/*"]
+    "matches": ["<all_urls>"]
   }],
+  "background": {
+    "scripts": [
+      "routing.js"
+    ]
+  },
   "manifest_version": 2
 }
