@@ -28,14 +28,14 @@ function addFollowButton(element, username) {
 }
 
 function checkAvailability(element) {
-    let cookie = getCookie('followers');
+    let notParsedFollowers = window.localStorage.getItem('followers');
 
-    if (!cookie) {
-        cookie = {list:[]};
-        document.cookie = `followers=${JSON.stringify(cookie)}`;
+    if (!notParsedFollowers) {
+        notParsedFollowers = JSON.stringify({list:[]});
+        window.localStorage.setItem('followers', notParsedFollowers);
     }
 
-    const followers = JSON.parse(cookie);
+    const followers = JSON.parse(notParsedFollowers);
     const username = element.text;
 
     return !followers.list.includes(username);
@@ -48,25 +48,12 @@ function addAvailability(element) {
 }
 
 function onClickedButton(element) {
-    const followers = JSON.parse(getCookie('followers'));
+    const followers = JSON.parse(window.localStorage.getItem('followers'));
     followers.list.push(element.id);
-    document.cookie = `followers=${JSON.stringify(followers)}`;
-    console.log(element.id, 'added to database');
-}
+    followers.list = [...new Set(followers.list)];
+    window.localStorage.setItem('followers', JSON.stringify(followers));
 
-function getCookie(cname) {
-    var name = cname + "=";
-    var ca = document.cookie.split(';');
-    for (var i = 0; i < ca.length; i++) {
-        var c = ca[i];
-        while (c.charAt(0) == ' ') {
-            c = c.substring(1);
-        }
-        if (c.indexOf(name) == 0) {
-            return c.substring(name.length, c.length);
-        }
-    }
-    return "";
+    console.log(element.id, 'added to database');
 }
 
 chrome.runtime.onMessage.addListener(function (request) {
@@ -76,8 +63,9 @@ chrome.runtime.onMessage.addListener(function (request) {
         const followLinkButtons = document.getElementsByClassName('followLink');
 
         for (let i = 0, l = followers.length; i < l; i++) {
+            const username = followers[i].text;
             addAvailability(followers[i]);
-            addFollowButton(followButtons[i], followers[i].text);
+            addFollowButton(followButtons[i], username);
 
             if (followLinkButtons[i]) {
                 followLinkButtons[i].addEventListener('click', function () {
