@@ -58,7 +58,7 @@ function onClickedButton(element) {
 
 chrome.runtime.onMessage.addListener(function (request) {
     if (request.data) {
-        const followers = document.getElementsByClassName('FPmhX');
+        const followers = document.querySelectorAll('.FsskP .FPmhX');
         const followButtons = document.getElementsByClassName('BW116');
         const followLinkButtons = document.getElementsByClassName('followLink');
 
